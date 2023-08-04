@@ -204,8 +204,8 @@ class EmployeeCTRL extends Controller
             'city',
             'zip_code',
             'department',
-            'company',
             'role_id',
+            'company',
             'status'
         )->first();
 
