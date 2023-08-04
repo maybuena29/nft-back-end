@@ -15,12 +15,20 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('tbl_employee', function (Blueprint $table) {
             $table->id();
-            $table->foreign('id')->references('id')->on('users')->onUpdate('cascade');
-            $table->unsignedBigInteger('employee_number');
-            $table->string('name');
-            $table->string('contact');
-            $table->unsignedBigInteger('position_id');
-            $table->foreign('position_id')->references('id')->on('tbl_position')->onUpdate('cascade');
+            $table->unsignedBigInteger('account_id');
+            $table->foreign('account_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('contact')->nullable();
+            $table->string('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('department')->nullable();
+            $table->string('company')->nullable();
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->foreign('role_id')->references('id')->on('tbl_roles')->onUpdate('cascade');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

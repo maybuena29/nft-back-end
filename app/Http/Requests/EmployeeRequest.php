@@ -24,10 +24,18 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'unique:tbl_employee,employee_number,' . $this->employee->id
-            'employee_number' => ['required', 'min:5', 'max:20', 'unique:tbl_employee,employee_number'],
-            'name' => ['required'],
-            'position_id' => ['required'],
+            'account_id' => ['required', 'unique:tbl_employee,account_id'],
+            'firstname' => ['required'],
+            'lastname' => ['required'],
+            'contact' => ['required'],
+            'address' => ['required'],
+            'country' => ['required'],
+            'state' => ['required'],
+            'city' => ['required'],
+            'zip_code' => ['required'],
+            'department' => ['required'],
+            'company' => ['required'],
+            'role_id' => ['required'],
             'status' => ['required']
         ];
     }

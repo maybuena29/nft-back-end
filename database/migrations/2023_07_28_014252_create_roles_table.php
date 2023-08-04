@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePositionsTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreatePositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_position', function (Blueprint $table) {
+        Schema::create('tbl_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('position_name');
-            $table->string('department');
+            $table->string('role_name');
+            $table->string('permission');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

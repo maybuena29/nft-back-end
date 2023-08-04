@@ -29,13 +29,14 @@ class TokenAuthenticate
             $userinfo = User::find($user)->first();
 
             if(!$userinfo){
-                return response()->json(['message' => 'No User Found!'], 401);
+                return response()->json([
+                    'message' => 'No User Found From the Token!',
+                    'status' => 'Failed'
+                ], 401);
             }
 
             $request->merge(['user_info' => [
                 'id' => $userinfo->id,
-                'username' => $userinfo->username,
-                'fullname' => $userinfo->fullname,
                 'email' => $userinfo->email,
             ]]);
 

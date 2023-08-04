@@ -5,10 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,15 +26,25 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $id = $this->route('id');
 
+        return [
             'email' => [
                 'required',
-                'unique:users,email',
-                "email",
+                'email',
+                Rule::unique('users')->ignore($id)
             ],
             'firstname' => ['required'],
             'lastname' => ['required'],
+            'contact' => ['required'],
+            'address' => ['required'],
+            'country' => ['required'],
+            'state' => ['required'],
+            'city' => ['required'],
+            'department' => ['required'],
+            'company' => ['required'],
+            'role_id' => ['required'],
+            'status' => ['required']
 
         ];
     }

@@ -11,15 +11,29 @@ class EmployeeMODEL extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tbl_employee';
-    protected $fillable = ['employee_number', 'name', 'position_id', 'status'];
+    protected $fillable = [
+        'account_id',
+        'firstname',
+        'lastname',
+        'contact',
+        'address',
+        'country',
+        'state',
+        'city',
+        'zip_code',
+        'department',
+        'company',
+        'role_id',
+        'status'
+    ];
 
-    public function Position()
+    public function Role()
     {
-        return $this->belongsTo(PositionMODEL::class, 'position_id', 'id');
+        return $this->belongsTo(RoleMODEL::class, 'role_id', 'id');
     }
 
     public function Users()
     {
-        return $this->belongsTo(User::class, 'id', 'id');
+        return $this->belongsTo(User::class, 'account_id', 'id');
     }
 }

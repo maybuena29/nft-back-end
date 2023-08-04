@@ -2,24 +2,69 @@
 
 use App\Http\Controllers\EmployeeCTRL;
 use App\Http\Controllers\LoginCTRL;
-use App\Http\Controllers\PositionCTRL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('register', [LoginCTRL::class, 'register_user'])->middleware('verify_api_key')->name('register_user');
+// Login
 Route::post('login', [LoginCTRL::class, 'login'])->middleware('verify_api_key');
 
-Route::get('show/user',[LoginCTRL::class,'user_profile'])
+// Show All Users
+Route::get('user/show/all',[EmployeeCTRL::class,'showUsers'])
     ->middleware('verify_api_key', 'verify_token_key')
-    ->name('user_profile');
+    ->name('showUsers');
 
-Route::get('auth/user',[LoginCTRL::class,'verifyAuth'])
+// Register Account
+Route::post('user/register', [EmployeeCTRL::class, 'registerAccountProfile'])
+    ->middleware('verify_api_key')
+    ->name('registerAccountProfile');
+
+// Show User Profile
+Route::get('user/show/profile',[EmployeeCTRL::class,'showProfile'])
     ->middleware('verify_api_key', 'verify_token_key')
-    ->name('verifyAuth');
+    ->name('showProfile');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Update User
+Route::put('user/update/{id}',[EmployeeCTRL::class,'updateProfile'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('updateProfile');
+
+// Archive User
+Route::delete('user/archive/{id}',[EmployeeCTRL::class,'archiveUser'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('archiveUser');
+
+// Restore User
+Route::post('user/restore/{id}',[EmployeeCTRL::class,'restoreUser'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('restoreUser');
+
+// Show Archived Users
+Route::get('user/show/archived',[EmployeeCTRL::class,'showArchivedUsers'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('showArchivedUsers');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 // Route::middleware('auth')->group(function(){
 //     //Employee Routes
