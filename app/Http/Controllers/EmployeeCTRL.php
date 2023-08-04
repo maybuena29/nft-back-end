@@ -196,7 +196,7 @@ class EmployeeCTRL extends Controller
         ->select(
             'id',
             'account_id',
-            DB::raw("CONCAT(`firstname`, ' ', `lastname`) as `fullname`"),
+            DB::raw("CONCAT(firstname, ' ', lastname) as `fullname`"),
             'contact',
             'address',
             'country',

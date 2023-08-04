@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
         EmployeeMODEL::create([
             'account_id' => 1,
             'firstname' => "Admin",
-            'lastname' => "",
+            'lastname' => "Surname",
             'contact' => "09611233221",
             'address' => "Admin Address",
             'country' => "Philippines",
