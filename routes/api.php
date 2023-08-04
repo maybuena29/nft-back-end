@@ -28,6 +28,11 @@ Route::put('user/update/{id}',[EmployeeCTRL::class,'updateProfile'])
     ->middleware('verify_api_key', 'verify_token_key')
     ->name('updateProfile');
 
+// Update User Password
+Route::put('user/change/password/{id}',[EmployeeCTRL::class,'userPasswordChange'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('userPasswordChange');
+
 // Archive User
 Route::delete('user/archive/{id}',[EmployeeCTRL::class,'archiveUser'])
     ->middleware('verify_api_key', 'verify_token_key')

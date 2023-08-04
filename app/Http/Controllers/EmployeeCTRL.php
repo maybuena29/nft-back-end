@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use ReallySimpleJWT\Token;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -103,6 +105,70 @@ class EmployeeCTRL extends Controller
 
         }catch (Throwable $e) {
             DB::rollBack();
+            return response()->json([
+                "message" => $e->getMessage(),
+                "status" => "Failed"
+            ], 422);
+        }
+    }
+
+    // USER PASSWORD CHANGE
+    public function userPasswordChange(Request $request, $id){
+        try{
+            $userAccount = User::where("id", $id)->get('password')->first();
+            $checkOldPassword = Hash::check($request->input('old_password'), $userAccount->password);
+
+            if(!$checkOldPassword){
+                return response()->json([
+                    "message" => "Wrong Password!",
+                    "status" => "Failed",
+                ], 401);
+            }
+
+            if($request->input('new_password') != $request->input('confirm_password')){
+                return response()->json([
+                    "message" => "New password does not match!",
+                    "status" => "Failed",
+                ], 422);
+            }
+
+            $validation = Validator::make($request->all(),[
+                'new_password' => [
+                    'required',
+                    Password::min(8)
+                        ->letters()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+                ],
+                'confirm_password' => [
+                    'required',
+                    Password::min(8)
+                        ->letters()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+                ],
+            ]);
+
+            if($validation->fails()){
+                return response()->json([
+                    "message" => $validation->errors()->first(),
+                    "status" => "Validation Failed",
+                ], 422);
+            }
+
+            // $userAccount->update(array($request->input('new_password')));
+            User::whereId($request->input('user_info.id'))->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+
+            return response()->json([
+                "message" => "Password Updated Successfully",
+                "status" => "Success"
+            ], Response::HTTP_OK);
+
+        }catch(Throwable $e){
             return response()->json([
                 "message" => $e->getMessage(),
                 "status" => "Failed"
