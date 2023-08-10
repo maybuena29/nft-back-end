@@ -31,10 +31,18 @@ class LoginCTRL extends Controller
         }
 
         if(!auth()->attempt($request->only('email','password'),$request->remember)){
-            return response()->json(["message" => 'Invalid Credentials!'], Response::HTTP_UNAUTHORIZED);
+            return response()->json([
+                "message" => 'Invalid Credentials!'
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $expiration = time() + 1440;
+        if(Auth::user()->status != 'active'){
+            return response()->json([
+                "message" => 'Account inactive, please contact the Admin!'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $expiration = time() + 86400;
         $token = Token::create(
             Auth::user()->id,
             env('SECRET_ID'),

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\EmployeeCTRL;
 use App\Http\Controllers\LoginCTRL;
-use Illuminate\Http\Request;
+use App\Http\Controllers\RoleCTRL;
 use Illuminate\Support\Facades\Route;
 
 // Login
@@ -22,6 +22,11 @@ Route::post('user/register', [EmployeeCTRL::class, 'registerAccountProfile'])
 Route::get('user/show/profile',[EmployeeCTRL::class,'showProfile'])
     ->middleware('verify_api_key', 'verify_token_key')
     ->name('showProfile');
+
+// Show Selected User Profile
+Route::get('user/show/profile/{id}',[EmployeeCTRL::class,'showSelectedUser'])
+    ->middleware('verify_api_key', 'verify_token_key')
+    ->name('showSelectedUser');
 
 // Update User
 Route::put('user/update/{id}',[EmployeeCTRL::class,'updateProfile'])
@@ -48,8 +53,10 @@ Route::get('user/show/archived',[EmployeeCTRL::class,'showArchivedUsers'])
     ->middleware('verify_api_key', 'verify_token_key')
     ->name('showArchivedUsers');
 
-
-
+// Show Roles
+Route::get('role/show/all',[RoleCTRL::class,'showRoles'])
+    // ->middleware('verify_api_key', 'verify_token_key')
+    ->name('showRoles');
 
 
 

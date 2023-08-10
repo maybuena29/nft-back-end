@@ -24,7 +24,6 @@ class EmployeeMODEL extends Model
         'department',
         'company',
         'role_id',
-        'status'
     ];
 
     public function Role()

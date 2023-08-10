@@ -29,7 +29,6 @@ class CreateEmployeesTable extends Migration
             $table->string('company')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('tbl_roles')->onUpdate('cascade');
-            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });

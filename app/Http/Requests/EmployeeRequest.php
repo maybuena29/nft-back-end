@@ -36,7 +36,6 @@ class EmployeeRequest extends FormRequest
             'department' => ['required'],
             'company' => ['required'],
             'role_id' => ['required'],
-            'status' => ['required']
         ];
     }
 }

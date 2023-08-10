@@ -21,8 +21,10 @@ class EmployeeCTRL extends Controller
     // SHOW USERS
     public function showUsers(){
         $userProfile = EmployeeMODEL::orderBy('account_id')
+        ->where('role_id', '!=' , 1)
+        ->orWhereNull('role_id')
         ->with(['Users' => function($query){
-            $query->select(['id', 'email']);
+            $query->select(['id', 'email', 'status']);
         }])
         ->with(['Role' => function($query){
             $query->select(['id', 'role_name', 'permission', 'status']);
@@ -30,7 +32,9 @@ class EmployeeCTRL extends Controller
         ->select(
             'id',
             'account_id',
-            DB::raw("CONCAT(`firstname`, ' ', `lastname`) as `fullname`"),
+            'firstname',
+            'lastname',
+            // DB::raw("CONCAT(`firstname`, ' ', `lastname`) as `fullname`"),
             'contact',
             'address',
             'country',
@@ -40,8 +44,7 @@ class EmployeeCTRL extends Controller
             'department',
             'company',
             'role_id',
-            'status'
-        )->where("status", "active")->get();
+        )->get();
 
         return response((array) [
             'data' => $userProfile,
@@ -59,6 +62,7 @@ class EmployeeCTRL extends Controller
             $userAccount = User::create([
                 'email' => $request->input('email'),
                 'password' => Hash::make(env('DEFAULT_PASSWORD')),
+                'status' => 'active'
             ], Response::HTTP_CREATED);
 
             if(!$userAccount){
@@ -81,7 +85,6 @@ class EmployeeCTRL extends Controller
                 'department' => $request->input('department'),
                 'company' => $request->input('company'),
                 'role_id' => $request->input('role_id'),
-                'status' => 'active'
             ];
 
             $userAccount->Employee()->create($userProfile);
@@ -188,7 +191,7 @@ class EmployeeCTRL extends Controller
 
         $userProfile = EmployeeMODEL::where('account_id', $userID)
         ->with(['Users' => function($query){
-            $query->select(['id', 'email']);
+            $query->select(['id', 'email', 'status']);
         }])
         ->with(['Role' => function($query){
             $query->select(['id', 'role_name', 'permission', 'status']);
@@ -206,7 +209,46 @@ class EmployeeCTRL extends Controller
             'department',
             'role_id',
             'company',
-            'status'
+        )->first();
+
+        return response((array) [
+            'data' => $userProfile,
+            'status' => 'success'
+        ], 200)
+        ->header('Content-Type', 'application/json');
+    }
+
+    // DISPLAY USER PROFILE
+    public function showSelectedUser($id){
+        $userID = $id;
+        if(!$userID){
+            return response()->json([
+                "message" => "No User Found!",
+                "status" => "Failed"
+            ], 401);
+        }
+
+        $userProfile = EmployeeMODEL::where('account_id', $userID)
+        ->with(['Users' => function($query){
+            $query->select(['id', 'email', 'status']);
+        }])
+        ->with(['Role' => function($query){
+            $query->select(['id', 'role_name', 'permission', 'status']);
+        }])
+        ->select(
+            'id',
+            'account_id',
+            'firstname',
+            'lastname',
+            'contact',
+            'address',
+            'country',
+            'state',
+            'city',
+            'zip_code',
+            'department',
+            'role_id',
+            'company',
         )->first();
 
         return response((array) [
@@ -242,10 +284,9 @@ class EmployeeCTRL extends Controller
                 'department' => $request->input('department'),
                 'company' => $request->input('company'),
                 'role_id' => $request->input('role_id'),
-                'status' => 'active'
             ];
 
-            $user->update($request->only('email'));
+            $user->update(array('email' => $request->input('email'), 'status' => $request->input('status')));
             $userProfile->update($userInput);
 
             return response()->json([
@@ -275,6 +316,8 @@ class EmployeeCTRL extends Controller
                 ], 404);
             }
 
+            // $userProfile->update(array('status' => 'archived'));
+            $userAccount->update(array('status' => 'archived'));
             $userProfile->delete();
             $userAccount->delete();
 
@@ -298,7 +341,8 @@ class EmployeeCTRL extends Controller
     public function showArchivedUsers(){
         $userProfile = EmployeeMODEL::onlyTrashed()
         ->with(['Users' => function($query){
-            $query->select(['id', 'email']);
+            $query->select(['id', 'email', 'status'])
+                ->withTrashed();
         }])
         ->with(['Role' => function($query){
             $query->select(['id', 'role_name', 'permission', 'status']);
@@ -306,7 +350,9 @@ class EmployeeCTRL extends Controller
         ->select(
             'id',
             'account_id',
-            DB::raw("CONCAT(`firstname`, ' ', `lastname`) as `fullname`"),
+            'firstname',
+            'lastname',
+            // DB::raw("CONCAT(`firstname`, ' ', `lastname`) as `fullname`"),
             'contact',
             'address',
             'country',
@@ -316,7 +362,6 @@ class EmployeeCTRL extends Controller
             'department',
             'company',
             'role_id',
-            'status'
         )->get();
 
         return response((array) [
@@ -345,6 +390,8 @@ class EmployeeCTRL extends Controller
                 ], 404);
             }
 
+            // $userProfile->update(array('status' => 'active'));
+            $userAccount->update(array('status' => 'active'));
             $userProfile->restore();
             $userAccount->restore();
 

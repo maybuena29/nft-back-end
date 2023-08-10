@@ -45,7 +45,6 @@ class UserUpdateRequest extends FormRequest
             'company' => ['required'],
             'role_id' => ['required'],
             'status' => ['required']
-
         ];
     }
 

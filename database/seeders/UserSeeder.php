@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             // 'username'=>'admin',
             'email'=>'admin@gmail.com',
             'password'=>bcrypt('admin123'),
+            'status' => 'active'
         ]);
 
         RoleMODEL::create([
@@ -41,7 +42,6 @@ class UserSeeder extends Seeder
             'department' => "Operations",
             'company' => "8nergy IT",
             'role_id' => 1,
-            'status' => 'active'
         ]);
 
 
