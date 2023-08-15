@@ -21,7 +21,7 @@ class EmployeeCTRL extends Controller
     // SHOW USERS
     public function showUsers(){
         $userProfile = EmployeeMODEL::orderBy('account_id')
-        ->where('role_id', '!=' , 1)
+        ->where('role_id', '!=' , 0)
         ->orWhereNull('role_id')
         ->with(['Users' => function($query){
             $query->select(['id', 'email', 'status']);
@@ -221,12 +221,6 @@ class EmployeeCTRL extends Controller
     // DISPLAY USER PROFILE
     public function showSelectedUser($id){
         $userID = $id;
-        if(!$userID){
-            return response()->json([
-                "message" => "No User Found!",
-                "status" => "Failed"
-            ], 401);
-        }
 
         $userProfile = EmployeeMODEL::where('account_id', $userID)
         ->with(['Users' => function($query){
@@ -250,6 +244,13 @@ class EmployeeCTRL extends Controller
             'role_id',
             'company',
         )->first();
+
+        if(!$userProfile){
+            return response()->json([
+                "message" => "No User Found!",
+                "status" => "Failed"
+            ], 401);
+        }
 
         return response((array) [
             'data' => $userProfile,
